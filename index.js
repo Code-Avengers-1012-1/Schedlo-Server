@@ -49,8 +49,10 @@ run().catch(console.dir);
 
 
 app.get("/", (req, res) => {
-    console.log({running: true})
-})
+  console.log({ running: true });
+  res.send("Server is running successfully!");
+});
+
 
 app.listen(port, () => {
     console.log(`Running on port ${port}`)
