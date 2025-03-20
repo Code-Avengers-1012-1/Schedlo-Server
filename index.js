@@ -44,6 +44,19 @@ async function run() {
       const result = await boardsCollection.deleteOne(query);
       res.send(result);
     });
+
+    app.get("/board/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).json({ error: "Invalid ObjectId format" });
+        }
+        const board = await boardsCollection.findOne({ _id: new ObjectId(id) });
+        res.json(board);
+      } catch (error) {
+        res.status(500).json({ error: "Server error" });
+      }
+    });
     //boards api added by SHOEB ends here
 
     // Send a ping to confirm a successful connection
