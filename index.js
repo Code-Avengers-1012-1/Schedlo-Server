@@ -1,16 +1,13 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config()
-const app = express()
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const app = express();
 const port = process.env.PORT || 5000;
 
+app.use(express.json());
+app.use(cors());
 
-app.use(express.json())
-app.use(cors())
-
-
-
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oq68b.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -19,7 +16,7 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
 
 async function run() {
@@ -27,30 +24,33 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const boardsCollection = client.db("timeDB").collection("boards")
+    const boardsCollection = client.db("timeDB").collection("boards");
 
+    //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
-      const result = await boardsCollection.find().toArray()
-      res.send(result)
-    })
+      const result = await boardsCollection.find().toArray();
+      res.send(result);
+    });
 
     app.post("/boards", async (req, res) => {
       const data = req.body;
-      const result = await boardsCollection.insertOne(data)
-      res.send(result)
-    })
+      const result = await boardsCollection.insertOne(data);
+      res.send(result);
+    });
 
     app.delete("/boards/:id", async (req, res) => {
-      const id = req.params.id
-      const query = {_id: new ObjectId(id)}
-      const result = await boardsCollection.deleteOne(query)
-      res.send(result)
-    })
-
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await boardsCollection.deleteOne(query);
+      res.send(result);
+    });
+    //boards api added by SHOEB ends here
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
@@ -58,17 +58,11 @@ async function run() {
 }
 run().catch(console.dir);
 
-
-
-
-
-
 app.get("/", (req, res) => {
   console.log({ running: true });
   res.send("Server is running successfully!");
 });
 
-
 app.listen(port, () => {
-    console.log(`Running on port ${port}`)
-})
+  console.log(`Running on port ${port}`);
+});
