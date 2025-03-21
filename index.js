@@ -24,10 +24,11 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-   const db = client.db("timeDB");
-    const boardsCollection = db.collection("boards");
-    const listCollection = db.collection("lists");
-    const cardsCollection = db.collection("cards")
+    const database = client.db("timeDB");
+    const boardsCollection = database.collection("boards");
+    const createListCollection = database.collection("createlists");
+    const taskCollection = database.collection("tasks");
+
 
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
@@ -84,19 +85,6 @@ async function run() {
     })
     // CreateList api added by SUVO end here
 
-
-    // Card api added by SHOEB starts here
-    app.post("/addCard", async (req, res) => {
-      const data = req.body;
-      const result = await cardsCollection.insertOne(data)
-      res.send(result)
-    })
-
-    app.get("/cards", async (req, res) => {
-      const result = await cardsCollection.find().toArray()
-      res.send(result)
-    })
-    // Card api added by SHOEB starts here
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
