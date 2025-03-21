@@ -86,7 +86,7 @@ async function run() {
     // CreateList api added by SUVO end here
 
 
-    app.post("/cards", async (req, res) => {
+    app.post("/addCard", async (req, res) => {
       const data = req.body;
       const result = await cardCollection.insertOne(data);
       res.send(result);
