@@ -29,6 +29,7 @@ async function run() {
     const createListCollection = database.collection("createlists");
     const taskCollection = database.collection("tasks");
 
+
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
       const result = await boardsCollection.find().toArray();
@@ -47,36 +48,43 @@ async function run() {
       const result = await boardsCollection.deleteOne(query);
       res.send(result);
     });
+
+    app.get("/board/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).json({ error: "Invalid ObjectId format" });
+        }
+        const board = await boardsCollection.findOne({ _id: new ObjectId(id) });
+        res.json(board);
+      } catch (error) {
+        res.status(500).json({ error: "Server error" });
+      }
+    });
     //boards api added by SHOEB ends here
 
     // CreateList api added by SUVO start here
-    app.get("/createlist", async (req, res) => {
-      const reslut = await createListCollection.find().toArray();
-      res.send(reslut);
+    app.get("/createlist/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {boardId: id}
+      const result = await listCollection.find(query).toArray();
+      res.send(result);
     });
 
     app.post("/createlist", async (req, res) => {
       const data = req.body;
-      const reslut = await createListCollection.insertOne(data);
-      res.send(reslut);
+      const result = await listCollection.insertOne(data);
+      res.send(result);
     });
 
+    app.delete("/list/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await listCollection.deleteOne(query)
+      res.send(result)
+    })
     // CreateList api added by SUVO end here
 
-    // Task related api added by SUVO start here
-
-    app.get("/task", async (req, res) => {
-      const reslut = await taskCollection.find().toArray();
-      res.send(reslut);
-    });
-
-    app.post("/task", async (req, res) => {
-      const data = req.body;
-      const reslut = await taskCollection.insertOne(data);
-      res.send(reslut);
-    });
-
-    // Task related api added by SUVO end here
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
