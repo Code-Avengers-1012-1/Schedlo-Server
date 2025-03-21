@@ -62,8 +62,10 @@ async function run() {
     //boards api added by SHOEB ends here
 
     // CreateList api added by SUVO start here
-    app.get("/createlist", async (req, res) => {
-      const result = await listCollection.find().toArray();
+    app.get("/createlist/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {boardId: id}
+      const result = await listCollection.find(query).toArray();
       res.send(result);
     });
 
@@ -72,6 +74,13 @@ async function run() {
       const result = await listCollection.insertOne(data);
       res.send(result);
     });
+
+    app.delete("/list/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await listCollection.deleteOne(query)
+      res.send(result)
+    })
 
     // CreateList api added by SUVO end here
 
