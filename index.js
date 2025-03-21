@@ -26,6 +26,8 @@ async function run() {
 
     const database = client.db("timeDB");
     const boardsCollection = database.collection("boards");
+    const createListCollection = database.collection("createlists");
+    const taskCollection = database.collection("tasks");
 
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
@@ -60,6 +62,21 @@ async function run() {
     });
 
     // CreateList api added by SUVO end here
+
+    // Task related api added by SUVO start here
+
+    app.get("/task", async (req, res) => {
+      const reslut = await taskCollection.find().toArray();
+      res.send(reslut);
+    });
+
+    app.post("/task", async (req, res) => {
+      const data = req.body;
+      const reslut = await taskCollection.insertOne(data);
+      res.send(reslut);
+    });
+
+    // Task related api added by SUVO end here
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
