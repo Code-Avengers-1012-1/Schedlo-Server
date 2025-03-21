@@ -24,8 +24,9 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const database = client.db("timeDB");
-    const boardsCollection = database.collection("boards");
+   const db = client.db("timeDB");
+    const boardsCollection = db.collection("boards");
+    const listCollection = db.collection("lists");
 
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
@@ -62,14 +63,14 @@ async function run() {
 
     // CreateList api added by SUVO start here
     app.get("/createlist", async (req, res) => {
-      const reslut = await createListCollection.find().toArray();
-      res.send(reslut);
+      const result = await listCollection.find().toArray();
+      res.send(result);
     });
 
     app.post("/createlist", async (req, res) => {
       const data = req.body;
-      const reslut = await createListCollection.insertOne(data);
-      res.send(reslut);
+      const result = await listCollection.insertOne(data);
+      res.send(result);
     });
 
     // CreateList api added by SUVO end here
