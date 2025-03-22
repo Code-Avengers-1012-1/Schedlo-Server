@@ -32,7 +32,9 @@ async function run() {
 
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
-      const result = await boardsCollection.find().toArray();
+      const email = req.query?.email
+      const query = {currentUser: email}
+      const result = await boardsCollection.find(query).toArray();
       res.send(result);
     });
 
