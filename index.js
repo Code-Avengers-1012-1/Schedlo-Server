@@ -95,11 +95,13 @@ async function run() {
     });
 
     app.get("/cards", async (req, res) => {
-      const result = await cardCollection.find().toArray();
+      const email = req.query.email
+      const query = {userEmail: email}
+      const result = await cardCollection.find(query).toArray();
       res.send(result);
     });
 
-    app.delete("/cards/:id", async (req, res) => {
+    app.delete("/card/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await cardCollection.deleteOne(query);
@@ -115,7 +117,9 @@ async function run() {
     })
 
     app.get("/schedules", async (req, res) => {
-      const result = await schedulesCollection.find().toArray()
+      const email = req.query.email
+      const query = {userEmail: email}
+      const result = await schedulesCollection.find(query).toArray()
       res.send(result)
     })
 
