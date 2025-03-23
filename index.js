@@ -99,7 +99,13 @@ async function run() {
       res.send(result);
     });
 
-    //card api added by SHOEB ends from here
+    app.delete("/cards/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cardCollection.deleteOne(query);
+      res.send(result);
+    });
+
 
     //schedules api added by SHOEB starts from here
     app.post("/schedules", async (req, res) => {
