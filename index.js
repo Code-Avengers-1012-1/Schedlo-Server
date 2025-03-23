@@ -29,7 +29,6 @@ async function run() {
     const listCollection = database.collection("lists");
     const cardCollection = database.collection("cards");
 
-
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
       const result = await boardsCollection.find().toArray();
@@ -65,8 +64,8 @@ async function run() {
 
     // CreateList api added by SUVO start here
     app.get("/createlist/:id", async (req, res) => {
-      const id = req.params.id
-      const query = {boardId: id}
+      const id = req.params.id;
+      const query = { boardId: id };
       const result = await listCollection.find(query).toArray();
       res.send(result);
     });
@@ -78,13 +77,12 @@ async function run() {
     });
 
     app.delete("/list/:id", async (req, res) => {
-      const id = req.params.id
-      const query = {_id: new ObjectId(id)}
-      const result = await listCollection.deleteOne(query)
-      res.send(result)
-    })
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await listCollection.deleteOne(query);
+      res.send(result);
+    });
     // CreateList api added by SUVO end here
-
 
     app.post("/addCard", async (req, res) => {
       const data = req.body;
@@ -94,6 +92,14 @@ async function run() {
 
     app.get("/cards", async (req, res) => {
       const result = await cardCollection.find().toArray();
+      res.send(result);
+    });
+
+    //card remove form database related api
+    app.delete("/cards/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cardCollection.deleteOne(query);
       res.send(result);
     });
 
