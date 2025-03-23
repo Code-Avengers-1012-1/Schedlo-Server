@@ -28,12 +28,12 @@ async function run() {
     const boardsCollection = database.collection("boards");
     const listCollection = database.collection("lists");
     const cardCollection = database.collection("cards");
-
+    const schedulesCollection = database.collection("schecules");
 
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
-      const email = req.query?.email
-      const query = {currentUser: email}
+      const email = req.query?.email;
+      const query = { currentUser: email };
       const result = await boardsCollection.find(query).toArray();
       res.send(result);
     });
@@ -67,8 +67,8 @@ async function run() {
 
     // CreateList api added by SUVO start here
     app.get("/createlist/:id", async (req, res) => {
-      const id = req.params.id
-      const query = {boardId: id}
+      const id = req.params.id;
+      const query = { boardId: id };
       const result = await listCollection.find(query).toArray();
       res.send(result);
     });
@@ -80,14 +80,14 @@ async function run() {
     });
 
     app.delete("/list/:id", async (req, res) => {
-      const id = req.params.id
-      const query = {_id: new ObjectId(id)}
-      const result = await listCollection.deleteOne(query)
-      res.send(result)
-    })
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await listCollection.deleteOne(query);
+      res.send(result);
+    });
     // CreateList api added by SUVO end here
 
-
+    //card api added by SHOEB starts from here
     app.post("/addCard", async (req, res) => {
       const data = req.body;
       const result = await cardCollection.insertOne(data);
@@ -98,6 +98,28 @@ async function run() {
       const result = await cardCollection.find().toArray();
       res.send(result);
     });
+
+    //card api added by SHOEB ends from here
+
+    //schedules api added by SHOEB starts from here
+    app.post("/schedules", async (req, res) => {
+      const data = req.body
+      const result = await schedulesCollection.insertOne(data)
+      res.send(result)
+    })
+
+    app.get("/schedules", async (req, res) => {
+      const result = await schedulesCollection.find().toArray()
+      res.send(result)
+    })
+
+    app.delete("/schedule/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await schedulesCollection.deleteOne(query)
+      res.send(result)
+    })
+    //schedules api added by SHOEB ends from here
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
