@@ -28,10 +28,14 @@ async function run() {
     const boardsCollection = database.collection("boards");
     const listCollection = database.collection("lists");
     const cardCollection = database.collection("cards");
+    const schedulesCollection = database.collection("schecules");
+
 
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
-      const result = await boardsCollection.find().toArray();
+      const email = req.query?.email;
+      const query = { currentUser: email };
+      const result = await boardsCollection.find(query).toArray();
       res.send(result);
     });
 
@@ -95,13 +99,28 @@ async function run() {
       res.send(result);
     });
 
-    //card remove form database related api
-    app.delete("/cards/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await cardCollection.deleteOne(query);
-      res.send(result);
-    });
+    //card api added by SHOEB ends from here
+
+    //schedules api added by SHOEB starts from here
+    app.post("/schedules", async (req, res) => {
+      const data = req.body
+      const result = await schedulesCollection.insertOne(data)
+      res.send(result)
+    })
+
+    app.get("/schedules", async (req, res) => {
+      const result = await schedulesCollection.find().toArray()
+      res.send(result)
+    })
+
+    app.delete("/schedule/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await schedulesCollection.deleteOne(query)
+      res.send(result)
+    })
+    //schedules api added by SHOEB ends from here
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
