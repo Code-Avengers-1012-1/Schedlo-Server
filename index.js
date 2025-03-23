@@ -30,6 +30,7 @@ async function run() {
     const cardCollection = database.collection("cards");
     const schedulesCollection = database.collection("schecules");
 
+
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
       const email = req.query?.email;
@@ -87,7 +88,6 @@ async function run() {
     });
     // CreateList api added by SUVO end here
 
-    //card api added by SHOEB starts from here
     app.post("/addCard", async (req, res) => {
       const data = req.body;
       const result = await cardCollection.insertOne(data);
@@ -120,6 +120,7 @@ async function run() {
       res.send(result)
     })
     //schedules api added by SHOEB ends from here
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
