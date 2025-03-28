@@ -22,14 +22,14 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const database = client.db("timeDB");
     const boardsCollection = database.collection("boards");
     const listCollection = database.collection("lists");
     const cardCollection = database.collection("cards");
     const schedulesCollection = database.collection("schecules");
-
+    const usersCollection = database.collection("users");
 
     //boards api added by SHOEB starts from here
     app.get("/boards", async (req, res) => {
@@ -95,8 +95,8 @@ async function run() {
     });
 
     app.get("/cards", async (req, res) => {
-      const email = req.query.email
-      const query = {userEmail: email}
+      const email = req.query.email;
+      const query = { userEmail: email };
       const result = await cardCollection.find(query).toArray();
       res.send(result);
     });
@@ -108,35 +108,48 @@ async function run() {
       res.send(result);
     });
 
-
     //schedules api added by SHOEB starts from here
     app.post("/schedules", async (req, res) => {
-      const data = req.body
-      const result = await schedulesCollection.insertOne(data)
-      res.send(result)
-    })
+      const data = req.body;
+      const result = await schedulesCollection.insertOne(data);
+      res.send(result);
+    });
 
     app.get("/schedules", async (req, res) => {
-      const email = req.query.email
-      const query = {userEmail: email}
-      const result = await schedulesCollection.find(query).toArray()
-      res.send(result)
-    })
+      const email = req.query.email;
+      const query = { userEmail: email };
+      const result = await schedulesCollection.find(query).toArray();
+      res.send(result);
+    });
 
     app.delete("/schedule/:id", async (req, res) => {
-      const id = req.params.id
-      const query = {_id: new ObjectId(id)}
-      const result = await schedulesCollection.deleteOne(query)
-      res.send(result)
-    })
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await schedulesCollection.deleteOne(query);
+      res.send(result);
+    });
     //schedules api added by SHOEB ends from here
 
+    // users api added by SHOEB starts from here
+    app.post("/users", async (req, res) => {
+      const data = req.body;
+      const result = await usersCollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.get("/users", async (req, res) => {
+      const email = req.query.email
+      const query = {email: email}
+      const result = await usersCollection.find(query).toArray();
+      res.send(result);
+    });
+    // users api added by SHOEB ends from here
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!"
+    // );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
