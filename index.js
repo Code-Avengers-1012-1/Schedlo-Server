@@ -95,6 +95,11 @@ async function run() {
     });
 
     app.get("/cards", async (req, res) => {
+      const result = await cardCollection.find().toArray()
+      res.send(result)
+    })
+
+    app.get("/cards", async (req, res) => {
       const email = req.query.email;
       const query = { userEmail: email };
       const result = await cardCollection.find(query).toArray();
@@ -138,11 +143,23 @@ async function run() {
     });
 
     app.get("/users", async (req, res) => {
+      const result = await usersCollection.find().toArray()
+      res.send(result)
+    });
+
+    app.get("/user", async (req, res) => {
       const email = req.query.email
       const query = {email: email}
       const result = await usersCollection.find(query).toArray();
       res.send(result);
     });
+
+    app.delete("user/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await usersCollection.deleteOne(query)
+      res.send(result)
+    })
     // users api added by SHOEB ends from here
 
     // Send a ping to confirm a successful connection
